@@ -57,8 +57,10 @@ for(i in ii){
     HR<-na.omit(HR)
     HR <- HR[!is.infinite(rowSums(HR[,6:7])),]
     P<-t.test((1-HR[,6])*(1-HR[,7]))$p.value
-    Z<-rbind(Z,c(z,P))
     print(c(z,P))
+    m<-metagen(HR[,1],seTE=HR[,3],comb.fixed = TRUE,comb.random = TRUE,prediction=F,sm="HR")
+    Z<-rbind(Z,c(z,m$pval.fixed))
+    print(c(z,m$pval.fixed))
   }
   thres<-Z[which.min(Z[,2]),1]
   HR<-c()
@@ -75,15 +77,14 @@ for(i in ii){
   }
   print(i)
   rownames(HR)<-TCGAProjects
-  write.table(HR,file=paste("./OS_HR/",rownames(input)[i],".OS.HR.PANC.txt",sep=""),sep="\t",col.names = NA,row.names = T,quote=F)
-  print(HR)
-  
+
   m<-metagen(HR[,1],seTE=HR[,3],
              comb.fixed = TRUE,
              comb.random = TRUE,
              prediction=F,
              sm="HR")
-  
+  write.table(m,file=paste("./OS_HR/",rownames(input)[i],".OS.HR.m.PANC.txt",sep=""),sep="\t",col.names = NA,row.names = T,quote=F)
+  write.table(HR,file=paste("./OS_HR/",rownames(input)[i],".OS.HR.n.PANC.txt",sep=""),sep="\t",col.names = NA,row.names = T,quote=F)
   pdf(paste("./OS_HR/",rownames(input)[i],".OS.HR.PANC.pdf",sep=""))
   forest(m,leftlabs = rownames(HR),
          lab.e = "Intervention",
