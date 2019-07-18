@@ -39,7 +39,6 @@ phen$week=phen$time/7
 panc<-read.table("https://raw.githubusercontent.com/Shicheng-Guo/PANC/master/extdata/panc.txt",head=T)
 ii<-unlist(lapply(rownames(panc),function(x) grep(x,rownames(input))))
 
-
 for(i in ii){
   Z<-c()
   for(z in quantile(newdata[i,],seq(0, 1, 0.025))[2:40]){
@@ -86,7 +85,7 @@ for(i in ii){
              sm="HR")
   
   pdf(paste("./OS_HR/",rownames(input)[i],".OS.HR.PANC.pdf",sep=""))
-  forest(m,leftlabs = rownames(HR),xlim=c(0.1,3),
+  forest(m,leftlabs = rownames(HR),
          lab.e = "Intervention",
          pooled.totals = FALSE,
          smlab = "",studlab=rownames(HR),
