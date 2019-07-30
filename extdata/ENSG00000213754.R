@@ -38,6 +38,7 @@ phen$week=phen$time/7
 i=grep("ENSG00000231246",rownames(input))  # PANC246
 i=grep("ENSG00000213754",rownames(input))  # PANC754
 i=grep("ENSG00000181896",rownames(input))  # ZNF101
+i=grep("ENSG00000131849",rownames(input))  # ZNF132
 
 out2<-c()
 HR<-c()
@@ -45,7 +46,7 @@ for(TCGAProject in TCGAProjects){
   newdata<-input[,phen$project_id==paste("TCGA-",TCGAProject,sep="")]
   xphen<-phen[phen$project_id==paste("TCGA-",TCGAProject,sep=""),]
   dat<-data.frame(Rna=newdata[i,],xphen)
-  thres<-mean(newdata[i,],na.rm=T)
+  thres<-mean(dat[,1],na.rm=T)
   dat$Rna[dat$Rna<=thres]<-0
   dat$Rna[dat$Rna>thres]<-1
   hr.fit<-summary(coxph(Surv(week,censored)~Rna,dat))
